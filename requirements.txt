@@ -1,2 +1,9 @@
 streamlit
 openai
+langgraph
+langsmith 
+langchain 
+langchain_community 
+langchain-openai
+pydantic
+ipython
