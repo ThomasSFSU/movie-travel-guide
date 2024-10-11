@@ -51,9 +51,7 @@ system_prompt = """
       The dataframe df has info on films and TV series made in San Francisco
       The df columns are:
       'Title', 'Release Year', 'Locations', 'Fun Facts', 'Production Company',
-            'Distributor', 'Director', 'Writer', 'Actor 1', 'Actor 2', 'Actor 3',
-            'SF Find Neighborhoods', 'Analysis Neighborhoods',
-            'Current Supervisor Districts'
+            'Distributor', 'Director', 'Writer', 'Actor 1', 'Actor 2', 'Actor 3'
 
       If you don't know the answer, just say that you don't know.
      """
