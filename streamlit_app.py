@@ -71,7 +71,7 @@ prompt = ChatPromptTemplate.from_messages(
 # Load the data =====================
 import pandas as pd
 
-file_path = './data/Film_Locations_in_San_Francisco_20241005.csv'
+file_path = './data/cleaned_sf_films_data.csv'
 
 df = pd.read_csv(file_path)
 columns = df.columns
