@@ -169,19 +169,10 @@ except Exception:
     # This requires some extra dependencies and is optional
     pass
 
-user_input="Hi there!, My name is John"
+# ++++++++++++++++++++++++++++++++++++++++++++
+st.title("Travel Guide")
 
-events=graph.stream(
-     {"messages": [("user", user_input)]},stream_mode="values"
-)
-
-for event in events:
-  event["messages"][-1].pretty_print()
-
-
-st.title("GPT Clone")
-
-# Set OpenAI API key from Streamlit secrets
+# # Set OpenAI API key from Streamlit secrets
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"],base_url = "https://api.aimlapi.com/v1")
 
 # Set a default model
@@ -198,23 +189,41 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
 # React to user input
-if prompt := st.chat_input("What's up???????"):
+if prompt := st.chat_input("Ask me about movies made in SF!"):
     # Display user message in chat message container
     with st.chat_message("user"):
         st.markdown(prompt)
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-    # Display assistant response in chat message container
-    with st.chat_message("assistant"):
-        stream = client.chat.completions.create(
-            model=st.session_state["openai_model"],   
-            messages=[
-                {"role": m["role"], "content": m["content"]}
-                for m in st.session_state.messages
-            ],
-            stream=True,
+    # Add the event to the graph stream (user prompt input)
+    events = graph.stream(
+            {"messages": [("user", prompt)]},stream_mode="values"
         )
-        response = st.write_stream(stream)
+    # Display the response (This is to the terminal)
+    for event in events:
+            event["messages"][-1].pretty_print()
+
+   # Display assistant response in chat message container
+    with st.chat_message("assistant"):
+        # stream = client.chat.completions.create(
+        #     model=st.session_state["openai_model"],   
+        #     messages=[
+        #         {"role": m["role"], "content": m["content"]}
+        #         for m in st.session_state.messages
+        #     ],
+        #     stream=True,
+        # )
+        inputs = {"messages": [("user", prompt)]}
+        # stream = graph.stream(
+        #     {"messages": [("user", prompt)]},stream_mode="values"
+        # )
+        for chunk in graph.stream(inputs, stream_mode="values"):
+            # print("__output__", final_result)
+            final_result = chunk
+        final_result["messages"][-1].pretty_print()
+
+        response = final_result["messages"][-1].content
+        st.write(response)
     # Add assistant message to chat history
     st.session_state.messages.append({"role": "assistant", "content": response})
